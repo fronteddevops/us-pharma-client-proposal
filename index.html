@@ -1,0 +1,1417 @@
+
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pharmacy &amp; Peptide Marketplace Platform — Technical Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root, html[data-theme="light"] {
+    --ink: #0f1c17;
+    --ink-soft: #2c3a33;
+    --paper: #f6f4ec;
+    --paper-2: #ffffff;
+    --paper-3: rgba(255,255,255,.45);
+    --moss: #1f5d44;
+    --moss-deep: #143c2c;
+    --sage: #6f9e7e;
+    --gold: #c08a3e;
+    --gold-soft: #e8d6b3;
+    --line: #d9d4c2;
+    --mute: #6b7770;
+    --red: #a23b2e;
+    --shadow: 0 24px 60px -28px rgba(15,28,23,.45);
+    --radius: 14px;
+    --hero-grad: linear-gradient(160deg, #143c2c 0%, #1f5d44 62%, #2a6e51 100%);
+    --bg-glow-1: rgba(111,158,126,.10);
+    --bg-glow-2: rgba(192,138,62,.08);
+    --b-high-bg: #d6e9dc; --b-high-fg: #143c2c;
+    --b-med-bg: #f3e4c4;  --b-med-fg: #8a6320;
+    --b-low-bg: #ecd4cf;  --b-low-fg: #a23b2e;
+    --callout-bg: #fbf3e1; --callout-fg: #8a6320;
+    --callout-alt-bg: #eef4ef; --callout-alt-border: #cfe0d4;
+    --pill-bg: #f6f4ec;
+    --row-alt: rgba(246,244,236,.5);
+  }
+  html[data-theme="dark"] {
+    --ink: #e8eae5;
+    --ink-soft: #b9c2bb;
+    --paper: #0d1612;
+    --paper-2: #15211b;
+    --paper-3: rgba(21,33,27,.6);
+    --moss: #3a8f6a;
+    --moss-deep: #0a1813;
+    --sage: #7fae8d;
+    --gold: #d6a45c;
+    --gold-soft: #e8d6b3;
+    --line: #2a3a31;
+    --mute: #8a968d;
+    --red: #d97e6f;
+    --shadow: 0 24px 60px -28px rgba(0,0,0,.7);
+    --radius: 14px;
+    --hero-grad: linear-gradient(160deg, #0a1813 0%, #143c2c 60%, #1f5d44 100%);
+    --bg-glow-1: rgba(58,143,106,.12);
+    --bg-glow-2: rgba(214,164,92,.07);
+    --b-high-bg: #1d3a2b; --b-high-fg: #8fd5ab;
+    --b-med-bg: #3d3320;  --b-med-fg: #e3c483;
+    --b-low-bg: #3d2622;  --b-low-fg: #e3a194;
+    --callout-bg: #241e10; --callout-fg: #e3c483;
+    --callout-alt-bg: #16241c; --callout-alt-border: #2a3a31;
+    --pill-bg: #0d1612;
+    --row-alt: rgba(13,22,18,.5);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    transition: background .3s ease, color .3s ease;
+    background-image:
+      radial-gradient(circle at 12% 8%, var(--bg-glow-1), transparent 38%),
+      radial-gradient(circle at 88% 92%, var(--bg-glow-2), transparent 42%);
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 32px; }
+  h1,h2,h3,h4 { font-family: 'Fraunces', serif; font-weight: 600; line-height: 1.18; letter-spacing: -.01em; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ---- theme toggle ---- */
+  .theme-toggle {
+    position: fixed; top: 16px; right: 16px; z-index: 50;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 100px;
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 7px;
+    box-shadow: var(--shadow);
+    transition: background .3s ease, border-color .3s ease, color .3s ease;
+  }
+  .theme-toggle:hover { border-color: var(--gold); }
+
+  .ribbon {
+    background: var(--moss-deep);
+    color: var(--gold-soft);
+    font-size: .72rem;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 9px 0;
+    font-weight: 600;
+  }
+
+  .hero {
+    background: var(--hero-grad);
+    color: #f6f4ec;
+    padding: 88px 0 96px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: ""; position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 2px, transparent 2px 22px);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; z-index: 2; }
+  .eyebrow {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .74rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold-soft);
+    border: 1px solid rgba(232,214,179,.35);
+    padding: 6px 14px; border-radius: 100px; margin-bottom: 26px;
+  }
+  .hero h1 { font-size: clamp(2.4rem, 6vw, 4.1rem); font-weight: 600; max-width: 17ch; margin-bottom: 22px; }
+  .hero h1 em { color: var(--gold-soft); font-style: italic; }
+  .hero p.lead { font-size: 1.12rem; max-width: 60ch; color: rgba(246,244,236,.86); font-weight: 400; }
+  .chips { margin-top: 34px; display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    font-size: .8rem; background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.16);
+    padding: 7px 14px; border-radius: 100px; font-weight: 500;
+  }
+  .meta-grid {
+    margin-top: 52px; display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: rgba(255,255,255,.14);
+    border: 1px solid rgba(255,255,255,.14);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .meta-grid div { background: rgba(10,24,19,.55); padding: 20px 22px; }
+  .meta-grid .k {
+    font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--sage); margin-bottom: 6px;
+  }
+  .meta-grid .v { font-family: 'Fraunces', serif; font-size: 1.05rem; color: #f6f4ec; }
+
+  section { padding: 84px 0; border-bottom: 1px solid var(--line); }
+  section:nth-of-type(even) { background: var(--paper-3); }
+  .sec-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: .73rem;
+    letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px;
+  }
+  .sec-tag::before { content: "— "; }
+  h2.sec-title { font-size: clamp(1.8rem, 3.6vw, 2.7rem); max-width: 24ch; margin-bottom: 14px; }
+  .sec-sub { color: var(--mute); max-width: 64ch; font-size: 1.04rem; margin-bottom: 44px; }
+
+  p.body { margin-bottom: 16px; }
+  p.body strong { color: var(--moss); }
+
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 40px; }
+  .stat {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 26px 22px; position: relative;
+  }
+  .stat::before {
+    content: ""; position: absolute; top: 0; left: 22px; right: 22px;
+    height: 3px; background: var(--gold); border-radius: 0 0 3px 3px;
+  }
+  .stat .num { font-family: 'Fraunces', serif; font-size: 2.3rem; color: var(--moss); line-height: 1; }
+  .stat .lbl { font-size: .82rem; color: var(--mute); margin-top: 8px; text-transform: uppercase; letter-spacing: .08em; }
+
+  .roles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .role {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); position: relative;
+  }
+  .role .icon {
+    width: 46px; height: 46px; border-radius: 11px; background: var(--moss);
+    color: #f6f4ec; display: grid; place-items: center; font-size: 1.3rem; margin-bottom: 16px;
+  }
+  .role.affil .icon { background: var(--gold); }
+  .role.cust .icon { background: var(--sage); }
+  .role.pharm .icon { background: var(--red); }
+  .role h3 { font-size: 1.3rem; margin-bottom: 4px; }
+  .role .who {
+    font-family: 'JetBrains Mono', monospace; font-size: .7rem;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--gold); margin-bottom: 6px;
+  }
+  .role .stage {
+    display: inline-block; font-size: .66rem; font-weight: 700;
+    padding: 2px 8px; border-radius: 5px; text-transform: uppercase;
+    letter-spacing: .06em; margin-bottom: 12px;
+  }
+  .stage-mvp { background: var(--b-high-bg); color: var(--b-high-fg); }
+  .stage-p2  { background: var(--b-med-bg); color: var(--b-med-fg); }
+  .role ul { list-style: none; }
+  .role ul li {
+    padding-left: 20px; position: relative; font-size: .92rem;
+    margin-bottom: 7px; color: var(--ink-soft);
+  }
+  .role ul li::before { content: "→"; position: absolute; left: 0; color: var(--sage); font-weight: 700; }
+
+  .flow {
+    margin-top: 40px; background: var(--moss-deep);
+    border-radius: var(--radius); padding: 36px 30px; color: #f6f4ec;
+  }
+  .flow h4 { color: var(--gold-soft); font-size: 1.05rem; margin-bottom: 22px; text-align: center; }
+  .flow-row { display: flex; align-items: stretch; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .flow-node {
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.18);
+    border-radius: 10px; padding: 14px 16px; flex: 1; min-width: 150px; text-align: center;
+  }
+  .flow-node .fn-t { font-family: 'Fraunces', serif; font-size: .98rem; color: var(--gold-soft); }
+  .flow-node .fn-d { font-size: .76rem; color: rgba(246,244,236,.7); margin-top: 4px; }
+  .flow-arrow { align-self: center; color: var(--sage); font-size: 1.3rem; font-weight: 700; }
+  .flow-split { display: flex; gap: 12px; flex: 1.4; min-width: 180px; flex-direction: column; }
+
+  .module {
+    margin-top: 36px; border: 1px solid var(--line);
+    border-radius: var(--radius); overflow: hidden; background: var(--paper-2);
+  }
+  .module-head {
+    background: linear-gradient(100deg, var(--moss) 0%, var(--moss-deep) 100%);
+    color: #f6f4ec; padding: 18px 26px; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+  }
+  .module-head .mk {
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+    letter-spacing: .14em; color: var(--gold-soft);
+  }
+  .module-head h3 { font-size: 1.25rem; }
+  .module-head .mstage {
+    margin-left: auto; font-size: .66rem; font-weight: 700; padding: 3px 9px;
+    border-radius: 5px; text-transform: uppercase; letter-spacing: .06em;
+  }
+  .module-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); }
+  .feat { background: var(--paper-2); padding: 22px 26px; }
+  .feat .ico { font-size: 1.2rem; margin-bottom: 8px; }
+  .feat h4 { font-size: 1.02rem; margin-bottom: 6px; }
+  .feat p { font-size: .9rem; color: var(--mute); margin-bottom: 10px; }
+  .feat ul { list-style: none; }
+  .feat ul li {
+    font-size: .85rem; padding-left: 16px; position: relative;
+    margin-bottom: 5px; color: var(--ink-soft);
+  }
+  .feat ul li::before { content: "▸"; position: absolute; left: 0; color: var(--gold); }
+
+  .stack { margin-top: 36px; }
+  .layer {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 20px 26px; margin-bottom: 8px;
+  }
+  .layer .ltop {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px; flex-wrap: wrap; gap: 8px;
+  }
+  .layer .lname { font-family: 'Fraunces', serif; font-size: 1.1rem; color: var(--moss); }
+  .layer .ltag {
+    font-family: 'JetBrains Mono', monospace; font-size: .68rem;
+    letter-spacing: .12em; text-transform: uppercase; color: var(--gold);
+  }
+  .layer .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill {
+    font-size: .78rem; background: var(--pill-bg); border: 1px solid var(--line);
+    padding: 5px 11px; border-radius: 7px; color: var(--ink-soft);
+  }
+  .stack-divider { text-align: center; color: var(--sage); font-size: 1.1rem; margin: 2px 0; }
+
+  .tbl-wrap { margin-top: 36px; overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--line); }
+  table { width: 100%; border-collapse: collapse; background: var(--paper-2); min-width: 620px; }
+  th {
+    background: var(--moss-deep); color: var(--gold-soft); text-align: left;
+    padding: 13px 16px; font-size: .76rem; letter-spacing: .08em;
+    text-transform: uppercase; font-weight: 600;
+  }
+  td { padding: 13px 16px; border-bottom: 1px solid var(--line); font-size: .9rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--row-alt); }
+  .badge {
+    display: inline-block; font-size: .72rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 6px; text-transform: uppercase; letter-spacing: .05em;
+  }
+  .b-high { background: var(--b-high-bg); color: var(--b-high-fg); }
+  .b-med  { background: var(--b-med-bg);  color: var(--b-med-fg); }
+  .b-low  { background: var(--b-low-bg);  color: var(--b-low-fg); }
+
+  .feas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin-top: 36px; }
+  .feas-card {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-left: 4px solid var(--moss); border-radius: 10px; padding: 22px 24px;
+  }
+  .feas-card.warn { border-left-color: var(--gold); }
+  .feas-card .fh { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .feas-card h4 { font-size: 1.05rem; }
+  .feas-card p { font-size: .89rem; color: var(--mute); }
+
+  /* ---- timeline ---- */
+  .stage-banner {
+    margin-top: 36px; margin-bottom: 8px;
+    background: linear-gradient(100deg, var(--moss) 0%, var(--moss-deep) 100%);
+    color: #f6f4ec; border-radius: var(--radius); padding: 22px 28px;
+  }
+  .stage-banner.p2 { background: linear-gradient(100deg, var(--gold) 0%, #8a6320 100%); }
+  .stage-banner.p3 { background: linear-gradient(100deg, #5b56b8 0%, #322e6e 100%); }
+  .stage-banner .sb-k {
+    font-family: 'JetBrains Mono', monospace; font-size: .72rem;
+    letter-spacing: .16em; text-transform: uppercase; color: var(--gold-soft); margin-bottom: 4px;
+  }
+  .stage-banner.p2 .sb-k { color: #fff4dd; }
+  .stage-banner.p3 .sb-k { color: #d9d7f5; }
+  .stage-banner h3 { font-size: 1.35rem; }
+  .stage-banner p { font-size: .9rem; color: rgba(246,244,236,.85); margin-top: 6px; max-width: 72ch; }
+
+  .timeline { margin-top: 14px; }
+  .phase { display: grid; grid-template-columns: 56px 1fr; gap: 22px; margin-bottom: 10px; }
+  .phase .pnum {
+    background: var(--moss); color: #f6f4ec; font-family: 'Fraunces', serif;
+    font-size: 1.25rem; border-radius: 12px; display: grid; place-items: center;
+    align-self: start; height: 56px; text-align: center; line-height: 1.05;
+  }
+  .phase.p2 .pnum { background: var(--gold); }
+  .phase.p3 .pnum { background: #5b56b8; }
+  .phase-body {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 22px 26px;
+  }
+  .phase-body .pweeks {
+    font-family: 'JetBrains Mono', monospace; font-size: .73rem;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--gold); margin-bottom: 4px;
+  }
+  .phase-body h3 { font-size: 1.15rem; margin-bottom: 8px; }
+  .phase-body p { font-size: .9rem; color: var(--mute); margin-bottom: 12px; }
+  .deliv { display: flex; flex-wrap: wrap; gap: 7px; }
+  .deliv span {
+    font-size: .76rem; background: var(--pill-bg); border: 1px solid var(--line);
+    padding: 4px 10px; border-radius: 6px; color: var(--ink-soft);
+  }
+  .total-note {
+    margin-top: 26px; background: var(--moss-deep); color: #f6f4ec;
+    border-radius: var(--radius); padding: 24px 28px;
+  }
+  .total-note strong { color: var(--gold-soft); }
+
+  .callout {
+    margin-top: 32px; background: var(--callout-bg);
+    border: 1px solid var(--callout-border, var(--line));
+    border-left: 4px solid var(--gold); border-radius: 10px;
+    padding: 20px 24px; font-size: .92rem; color: var(--ink-soft);
+  }
+  .callout strong { color: var(--callout-fg); }
+  .callout.alt {
+    background: var(--callout-alt-bg); border-color: var(--callout-alt-border);
+    border-left-color: var(--moss);
+  }
+  .callout.alt strong { color: var(--moss); }
+
+  .assume { margin-top: 28px; list-style: none; }
+  .assume li {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 14px 18px 14px 44px;
+    position: relative; margin-bottom: 10px; font-size: .92rem; color: var(--ink-soft);
+  }
+  .assume li::before {
+    content: "✓"; position: absolute; left: 14px; top: 13px;
+    width: 20px; height: 20px; background: var(--moss); color: #fff;
+    border-radius: 50%; display: grid; place-items: center;
+    font-size: .8rem; font-weight: 700;
+  }
+  .assume li strong { color: var(--moss); }
+
+  footer {
+    background: var(--moss-deep); color: rgba(246,244,236,.7);
+    padding: 50px 0 40px; text-align: center;
+  }
+  footer .ftitle { font-family: 'Fraunces', serif; color: #f6f4ec; font-size: 1.2rem; margin-bottom: 8px; }
+  footer .fmono {
+    font-family: 'JetBrains Mono', monospace; font-size: .76rem;
+    letter-spacing: .1em; margin-top: 18px; color: var(--sage);
+  }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 0 20px; }
+    section { padding: 60px 0; }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .roles, .feas, .module-body { grid-template-columns: 1fr; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .phase { grid-template-columns: 46px 1fr; gap: 14px; }
+    .phase .pnum { height: 46px; font-size: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+  <span id="themeIcon">◐</span><span id="themeLabel">THEME</span>
+</button>
+
+<div class="ribbon">Confidential · Client Proposal · Not for Distribution</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Technical Proposal &amp; Phased Delivery Plan</span>
+    <h1>Multi-Tenant <em>Pharmacy &amp; Peptide</em> Marketplace Platform</h1>
+    <p class="lead">A centralized commerce platform that lets a pharmacy operator onboard providers, clinics and pharmacies, equip each provider with their own branded storefront, and route every order to the right fulfillment partner — delivered as a working MVP in 45–60 days, then extended.</p>
+    <div class="chips">
+      <span class="chip">🏛 Admin Console</span>
+      <span class="chip">🏥 Provider Storefronts</span>
+      <span class="chip">👥 Store Staff</span>
+      <span class="chip">🛒 Customer Portal</span>
+      <span class="chip">💊 Pharmacy Partners</span>
+      <span class="chip">🤝 Affiliate Program</span>
+      <span class="chip">📦 Inventory &amp; Catalog</span>
+      <span class="chip">🚚 Split Fulfillment</span>
+      <span class="chip">🔔 Email &amp; SMS Alerts</span>
+      <span class="chip">🤖 AI-First (Stage 3)</span>
+    </div>
+    <div class="meta-grid">
+      <div><div class="k">Prepared For</div><div class="v">US Pharmacy &amp; Peptide Client</div></div>
+      <div><div class="k">Document</div><div class="v">Proposal v1.0</div></div>
+      <div><div class="k">MVP Target</div><div class="v">45–60 Days</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 01 OVERVIEW ============ -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-tag">01 · Overview</div>
+    <h2 class="sec-title">Executive Summary</h2>
+    <p class="sec-sub">A high-level summary of the platform, its commercial model, and the two-stage delivery approach.</p>
+
+    <p class="body">This proposal outlines the design, feasibility, and phased delivery of a <strong>multi-tenant pharmacy and peptide marketplace platform</strong>. The platform is operated by a single business owner (the Admin) and enables independent providers and clinics to sell pharmacy products and peptides through their own branded storefronts.</p>
+
+    <p class="body">Unlike a single-store e-commerce site, this is a <strong>business-to-business-to-consumer (B2B2C) platform</strong>. The Admin maintains the peptide catalog; pharmacies upload their own product inventory to the platform. Each provider selects products into their own storefront and sets their own retail price — their margin sits on top of the platform's base price. Customers are invited by a specific provider and buy only from that provider's store.</p>
+
+    <p class="body">Fulfillment is routed by product type: <strong>peptide orders are fulfilled by the platform owner directly</strong>, while <strong>pharmacy-product orders are redirected to the relevant pharmacy partner</strong> who fulfills them. A separate affiliate channel rewards partners for recruiting providers, earning a recurring commission based on those providers' ongoing sales.</p>
+
+    <p class="body">Delivery is structured in <strong>three stages</strong>. <strong>Stage 1 — the MVP — is targeted at 45–60 days</strong> and delivers a working platform across five roles: Admin, Provider, Store Staff, Customer, and Pharmacy. <strong>Stage 2</strong> layers on the payment gateway, automated revenue splits, the affiliate role and commission ledger, full prescription verification, accounting depth, and support tooling. <strong>Stage 3</strong> makes the platform AI-first — an AI layer running through every role, from a customer shopping assistant to AI-assisted prescription triage, all built on the platform's own data.</p>
+
+    <div class="stats">
+      <div class="stat"><div class="num">6</div><div class="lbl">User Roles</div></div>
+      <div class="stat"><div class="num">5</div><div class="lbl">Live in MVP</div></div>
+      <div class="stat"><div class="num">45–60</div><div class="lbl">Days to MVP</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">Delivery Stages</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 ROLES ============ -->
+<section id="roles">
+  <div class="wrap">
+    <div class="sec-tag">02 · Roles</div>
+    <h2 class="sec-title">User Roles &amp; Access Model</h2>
+    <p class="sec-sub">Each role operates from its own authenticated workspace. Permissions are enforced server-side so providers, staff, customers, pharmacies and affiliates only ever see what belongs to their own tenant. The badge on each role shows when it goes live.</p>
+
+    <div class="roles">
+      <div class="role">
+        <div class="icon">🏛</div>
+        <h3>Admin</h3>
+        <div class="who">Platform Operator · The Client</div>
+        <div class="stage stage-mvp">Live in MVP</div>
+        <ul>
+          <li>Onboard and approve providers/clinics and pharmacies</li>
+          <li>Manage the master peptide catalog and base pricing</li>
+          <li>Oversee pharmacy-uploaded inventory and platform inventory</li>
+          <li>Fulfill peptide orders routed to the platform owner</li>
+          <li>Accounting view; affiliate &amp; commission setup (Stage 2)</li>
+          <li>Compliance controls — Rx-required product flags</li>
+        </ul>
+      </div>
+
+      <div class="role">
+        <div class="icon">🏥</div>
+        <h3>Provider / Clinic</h3>
+        <div class="who">Storefront Owner</div>
+        <div class="stage stage-mvp">Live in MVP</div>
+        <ul>
+          <li>Sign up directly or be onboarded by the Admin</li>
+          <li>Create and brand their own storefront</li>
+          <li>Add catalog products to their store and set retail price</li>
+          <li>Invite customers to their store</li>
+          <li>Add and manage store staff sub-accounts</li>
+          <li>Chat directly with their store's customers</li>
+          <li>Access training videos and onboarding resources</li>
+          <li>View orders and store-level activity</li>
+        </ul>
+      </div>
+
+      <div class="role">
+        <div class="icon">👥</div>
+        <h3>Store Staff</h3>
+        <div class="who">Provider Sub-Account</div>
+        <div class="stage stage-mvp">Live in MVP</div>
+        <ul>
+          <li>Created and scoped by a parent provider</li>
+          <li>Process and update orders for that store only</li>
+          <li>Manage fulfillment status and customer queries</li>
+          <li>No access to pricing controls (configurable)</li>
+        </ul>
+      </div>
+
+      <div class="role cust">
+        <div class="icon">🛒</div>
+        <h3>Customer</h3>
+        <div class="who">Storefront Buyer</div>
+        <div class="stage stage-mvp">Live in MVP</div>
+        <ul>
+          <li>Joins by invitation from a specific provider</li>
+          <li>Browses and buys only from that provider's storefront</li>
+          <li>Uploads a prescription file where products require it</li>
+          <li>Places orders; order tracking and reorder history</li>
+        </ul>
+      </div>
+
+      <div class="role pharm">
+        <div class="icon">💊</div>
+        <h3>Pharmacy</h3>
+        <div class="who">Fulfillment Partner</div>
+        <div class="stage stage-mvp">Live in MVP</div>
+        <ul>
+          <li>Onboarded by the Admin with its own login</li>
+          <li>Uploads its pharmacy-product inventory to the platform</li>
+          <li>Receives pharmacy-product orders redirected from the platform</li>
+          <li>Fulfills and updates the status of those orders</li>
+          <li>Manages its own stock levels and product availability</li>
+        </ul>
+      </div>
+
+      <div class="role affil">
+        <div class="icon">🤝</div>
+        <h3>Affiliate</h3>
+        <div class="who">Provider Recruiter</div>
+        <div class="stage stage-p2">Stage 2</div>
+        <ul>
+          <li>Onboarded by the Admin with a unique referral code</li>
+          <li>Recruits new providers and clinics onto the platform</li>
+          <li>Earns recurring commission on referred providers' sales</li>
+          <li>Dashboard of referred providers, activity, and earnings</li>
+          <li>Commission statements and payout history</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="flow">
+      <h4>Order Flow — Split Fulfillment by Product Type</h4>
+      <div class="flow-row">
+        <div class="flow-node"><div class="fn-t">Customer Orders</div><div class="fn-d">Buys from provider storefront</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node"><div class="fn-t">Platform Routes</div><div class="fn-d">Splits order by product type</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-split">
+          <div class="flow-node"><div class="fn-t">💉 Peptide → Platform Owner</div><div class="fn-d">Admin fulfills directly</div></div>
+          <div class="flow-node"><div class="fn-t">💊 Pharmacy → Pharmacy Partner</div><div class="fn-d">Redirected to that pharmacy</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 FEATURES ============ -->
+<section id="features">
+  <div class="wrap">
+    <div class="sec-tag">03 · Features</div>
+    <h2 class="sec-title">Platform Modules</h2>
+    <p class="sec-sub">The platform is organized into functional modules. Each module header shows whether it ships in the MVP or in Stage 2.</p>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module A</span><h3>Admin Console</h3><span class="mstage b-high">MVP</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">🏥</div>
+          <h4>Provider &amp; Pharmacy Onboarding</h4>
+          <p>A single workspace to bring partners onto the platform and govern access.</p>
+          <ul>
+            <li>Approve, suspend, or reject provider/clinic accounts</li>
+            <li>Onboard pharmacy partners with their own login</li>
+            <li>Review provider self-signups via a verification queue</li>
+            <li>Per-provider settings: catalog access, fee rates</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">⚙️</div>
+          <h4>Platform Configuration</h4>
+          <p>Central controls for how the marketplace behaves.</p>
+          <ul>
+            <li>Rx-gating flags — which products require a prescription</li>
+            <li>Fee and margin policy defaults</li>
+            <li>Notification templates — email &amp; SMS</li>
+            <li>Training content and platform resources</li>
+            <li>Role and permission management across tenants</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module B</span><h3>Catalog &amp; Inventory</h3><span class="mstage b-high">MVP</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">📦</div>
+          <h4>Dual-Source Catalog</h4>
+          <p>Two inventory sources feed one unified catalog.</p>
+          <ul>
+            <li>Admin-owned peptide catalog with base pricing</li>
+            <li>Pharmacy-uploaded pharmacy-product inventory</li>
+            <li>Product records: SKU, description, images, batch/expiry</li>
+            <li>Category tagging, including Rx-required flags</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">📉</div>
+          <h4>Stock Tracking</h4>
+          <p>Live stock counts so storefronts never oversell.</p>
+          <ul>
+            <li>Stock decremented on order placement</li>
+            <li>Pharmacies manage their own product stock</li>
+            <li>Low-stock alerts and inventory adjustments</li>
+            <li>Stock visibility shared across all storefronts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module C</span><h3>Provider Storefront Engine</h3><span class="mstage b-high">MVP</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">🏪</div>
+          <h4>Storefront Builder</h4>
+          <p>Each provider runs an independent, branded store on shared infrastructure.</p>
+          <ul>
+            <li>Branded storefront — logo, name, contact details</li>
+            <li>Select products from the catalog into the store</li>
+            <li>Set retail price per product (base + provider margin)</li>
+            <li>Enable/disable products and control visibility</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">👥</div>
+          <h4>Store Staff &amp; Customer Invites</h4>
+          <p>Providers grow and operate their store with their own people.</p>
+          <ul>
+            <li>Invite customers via email link, scoped to that store</li>
+            <li>Create staff sub-accounts with order-management access</li>
+            <li>Configurable staff permission levels</li>
+            <li>Store-level activity log</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">💬</div>
+          <h4>Customer Chat</h4>
+          <p>Providers and their staff communicate with customers inside the platform.</p>
+          <ul>
+            <li>In-app chat between a provider/store staff and their customers</li>
+            <li>Conversation history retained per customer</li>
+            <li>Scoped to the provider's own storefront</li>
+            <li>Order-linked messaging for fulfillment queries</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">🎓</div>
+          <h4>Training &amp; Resources</h4>
+          <p>An onboarding and learning area to help providers run their store.</p>
+          <ul>
+            <li>Training videos accessible from the provider dashboard</li>
+            <li>Onboarding guides and how-to resources</li>
+            <li>Content managed centrally by the Admin</li>
+            <li>New resources surfaced to all providers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module D</span><h3>Orders &amp; Split Fulfillment</h3><span class="mstage b-high">MVP</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">🛒</div>
+          <h4>Customer Shopping &amp; Rx Upload</h4>
+          <p>A focused buying flow within the customer's assigned storefront.</p>
+          <ul>
+            <li>Browsing, search, cart, and order placement</li>
+            <li>Simple prescription file upload for Rx-flagged items</li>
+            <li>Order marked paid manually by Admin/Provider (MVP)</li>
+            <li>Order confirmation, history, and reorder</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">🚚</div>
+          <h4>Fulfillment Routing</h4>
+          <p>Orders are routed to the correct fulfiller automatically.</p>
+          <ul>
+            <li>Peptide orders routed to the platform owner (Admin)</li>
+            <li>Pharmacy-product orders redirected to the pharmacy partner</li>
+            <li>Order status workflow: new → fulfilled → shipped</li>
+            <li>Tracking numbers and customer messaging</li>
+            <li>Email &amp; SMS notifications on order and shipment events</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module E</span><h3>Payments &amp; Revenue Splits</h3><span class="mstage b-med">Stage 2</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">💳</div>
+          <h4>Gateway Checkout</h4>
+          <p>Online payment via the client-provided gateway.</p>
+          <ul>
+            <li>Card checkout via the client's payment gateway (API &amp; keys supplied)</li>
+            <li>Webhook-driven payment confirmation</li>
+            <li>Replaces the MVP's manual "mark as paid" step</li>
+            <li>Reconciliation and refund handling</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">🧮</div>
+          <h4>Revenue Split Engine</h4>
+          <p>Platform-side calculation of who is owed what.</p>
+          <ul>
+            <li>Split per order: platform fee, provider earnings, pharmacy share</li>
+            <li>Internal earnings ledger per provider and pharmacy</li>
+            <li>Immutable transaction log with full audit trail</li>
+            <li>Payout disbursement per gateway capability</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">Module F</span><h3>Affiliate, Accounting &amp; Support</h3><span class="mstage b-med">Stage 2</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">🤝</div>
+          <h4>Affiliate Commission Ledger</h4>
+          <p>The affiliate role and its recurring-commission engine.</p>
+          <ul>
+            <li>Referral attribution linking affiliates to recruited providers</li>
+            <li>Recurring commission accrual on referred-provider sales</li>
+            <li>Affiliate dashboard, statements, and payout history</li>
+            <li>Admin override and adjustment controls</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">📊</div>
+          <h4>Accounting &amp; Support Desk</h4>
+          <p>Financial reporting depth and a partner support channel.</p>
+          <ul>
+            <li>Revenue, payout, and per-partner earning reports</li>
+            <li>CSV/Excel export and tax reporting</li>
+            <li>Ticketing for providers, pharmacies, and customers</li>
+            <li>Knowledge base / FAQ managed by Admin</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 04 ARCHITECTURE ============ -->
+<section id="architecture">
+  <div class="wrap">
+    <div class="sec-tag">04 · Architecture</div>
+    <h2 class="sec-title">Technical Architecture</h2>
+    <p class="sec-sub">A layered, multi-tenant architecture so a single deployment serves the Admin, every provider storefront, and every pharmacy partner.</p>
+
+    <div class="stack">
+      <div class="layer">
+        <div class="ltop"><span class="lname">Layer 5 — Presentation</span><span class="ltag">User Interfaces</span></div>
+        <div class="pills">
+          <span class="pill">Admin Console (React)</span>
+          <span class="pill">Provider Dashboard (React)</span>
+          <span class="pill">Storefront / Customer Web (React)</span>
+          <span class="pill">Pharmacy Portal (React)</span>
+          <span class="pill">Affiliate Portal — Stage 2</span>
+          <span class="pill">Responsive — mobile &amp; desktop</span>
+        </div>
+      </div>
+      <div class="stack-divider">↕</div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">Layer 4 — API Gateway</span><span class="ltag">Secure REST API</span></div>
+        <div class="pills">
+          <span class="pill">JWT Auth + Role-Based Access Control</span>
+          <span class="pill">Tenant Isolation Middleware</span>
+          <span class="pill">Rate Limiting</span>
+          <span class="pill">TLS / HTTPS</span>
+        </div>
+      </div>
+      <div class="stack-divider">↕</div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">Layer 3 — Business Logic</span><span class="ltag">Node.js / Express Application Server</span></div>
+        <div class="pills">
+          <span class="pill">Dual-Source Catalog Service</span>
+          <span class="pill">Storefront &amp; Pricing Engine</span>
+          <span class="pill">Order &amp; Fulfillment Routing</span>
+          <span class="pill">Inventory Service</span>
+          <span class="pill">Customer Chat Service</span>
+          <span class="pill">Training Content Service</span>
+          <span class="pill">Notification Dispatcher — email &amp; SMS</span>
+          <span class="pill">Payment &amp; Split Engine — Stage 2</span>
+          <span class="pill">Affiliate Commission Engine — Stage 2</span>
+        </div>
+      </div>
+      <div class="stack-divider">↕</div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">Layer 2 — Data &amp; Services</span><span class="ltag">Persistence &amp; Integrations</span></div>
+        <div class="pills">
+          <span class="pill">MongoDB — multi-tenant database</span>
+          <span class="pill">Object storage — Rx docs, images, invoices</span>
+          <span class="pill">Email &amp; SMS gateway — notifications</span>
+          <span class="pill">Client-provided payment gateway — Stage 2</span>
+        </div>
+      </div>
+      <div class="stack-divider">↕</div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">Layer 1 — Infrastructure</span><span class="ltag">Hosting — Two Options</span></div>
+        <div class="pills">
+          <span class="pill">Option A — AWS (recommended)</span>
+          <span class="pill">Option B — Single VPS (e.g. Hostinger)</span>
+          <span class="pill">Automated backups</span>
+          <span class="pill">Monitoring &amp; logging</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout alt">
+      <strong>On the UI layer:</strong> All interfaces are built to consume designs and a component specification supplied by the client's chosen third-party UI/UX organization. This proposal's timeline covers front-end <em>implementation</em> against those designs — visual design and UX research are out of scope and excluded from the estimate, as instructed.
+    </div>
+
+    <h3 style="font-size:1.35rem;margin-top:48px;margin-bottom:8px;">Technology Stack — MERN</h3>
+    <p class="body" style="color:var(--mute);">The platform is built on the MERN stack — MongoDB, Express, React, and Node.js — a single-language (JavaScript) stack across front and back end, well suited to rapid delivery and a unified developer workflow.</p>
+    <div class="stack" style="margin-top:18px;">
+      <div class="layer">
+        <div class="ltop"><span class="lname">M — MongoDB</span><span class="ltag">Database</span></div>
+        <div class="pills">
+          <span class="pill">Document database for catalog, stores, orders, users</span>
+          <span class="pill">Flexible schema for the dual-source catalog</span>
+          <span class="pill">Transactions used for order &amp; financial integrity</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">E + N — Express &amp; Node.js</span><span class="ltag">Back End</span></div>
+        <div class="pills">
+          <span class="pill">REST API with role-based access control</span>
+          <span class="pill">Tenant isolation middleware</span>
+          <span class="pill">Business logic — pricing, routing, splits</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="ltop"><span class="lname">R — React</span><span class="ltag">Front End</span></div>
+        <div class="pills">
+          <span class="pill">All role interfaces — Admin, Provider, Customer, Pharmacy</span>
+          <span class="pill">Responsive — mobile &amp; desktop</span>
+          <span class="pill">Built against third-party UI/UX designs</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.35rem;margin-top:48px;margin-bottom:8px;">Deployment — Two Options</h3>
+    <p class="body" style="color:var(--mute);">The client can choose between a managed AWS deployment and a single dedicated VPS. Both run the same application code; they differ in scalability, resilience, and cost.</p>
+
+    <div class="feas" style="margin-top:22px;">
+      <div class="feas-card">
+        <div class="fh"><h4>☁️ Option A — AWS</h4><span class="badge b-high">Recommended</span></div>
+        <p style="margin-bottom:12px;">A managed, scalable setup where each part of the platform runs on a service built for it. Resilient, backed up, and able to grow with the platform.</p>
+        <ul style="list-style:none;">
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> <strong>Amazon DocumentDB</strong> — managed MongoDB-compatible database</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> <strong>EC2</strong> — runs the Node.js / Express application</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> <strong>S3 + CloudFront</strong> — hosts and delivers the React front end</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> <strong>S3</strong> — stores images, files, Rx documents and invoices</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Scales each layer independently; automated backups; high availability</li>
+        </ul>
+      </div>
+      <div class="feas-card warn">
+        <div class="fh"><h4>🖥️ Option B — Single VPS</h4><span class="badge b-med">Lower Cost</span></div>
+        <p style="margin-bottom:12px;">A single dedicated server (for example, Hostinger) running the entire platform — database, application, front end and file storage all on one machine.</p>
+        <ul style="list-style:none;">
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Database, Node.js app, React build and files all on one server</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Lower and more predictable monthly cost</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Simpler to set up and manage initially</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Single point of failure — no built-in redundancy</li>
+          <li style="padding-left:18px;position:relative;font-size:.86rem;margin-bottom:6px;color:var(--ink-soft);"><span style="position:absolute;left:0;color:var(--gold);">▸</span> Limited headroom — scaling means a bigger server, not more servers</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Recommendation:</strong> AWS (Option A) is recommended for a platform that handles healthcare-adjacent data, prescriptions and partner earnings, and is expected to grow as providers and pharmacies are added. The single-VPS option is viable for an early launch or a tight infrastructure budget, but it carries a single point of failure and limited room to scale. The deployment choice can be confirmed at the start of the project and does not affect the application code.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 SECURITY ============ -->
+<section id="security">
+  <div class="wrap">
+    <div class="sec-tag">05 · Security &amp; Compliance</div>
+    <h2 class="sec-title">Security &amp; Regulatory Considerations</h2>
+    <p class="sec-sub">A marketplace handling pharmacy products, prescriptions, and partner earnings carries real security and regulatory weight. The platform is designed with the following safeguards.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Concern</th><th>Area</th><th>Mitigation</th><th>Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cross-tenant data exposure</td>
+            <td>Platform</td>
+            <td>Every query is scoped by tenant ID at the data layer; role-based access control is enforced server-side, never trusted from the client.</td>
+            <td><span class="badge b-high">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Prescription document handling</td>
+            <td>Compliance</td>
+            <td>Rx files stored encrypted in access-controlled storage, visible only to authorized provider/staff and Admin. Full verification workflow arrives in Stage 2.</td>
+            <td><span class="badge b-high">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Payment &amp; cardholder data</td>
+            <td>Payments</td>
+            <td>Stage 2 — card data is handled by the client-provided gateway's hosted components and never stored on the platform's servers.</td>
+            <td><span class="badge b-high">Critical</span></td>
+          </tr>
+          <tr>
+            <td>Account takeover</td>
+            <td>Auth</td>
+            <td>Hashed credentials, JWT with short expiry, optional two-factor authentication for Admin, Provider and Pharmacy roles.</td>
+            <td><span class="badge b-med">High</span></td>
+          </tr>
+          <tr>
+            <td>Split / commission tampering</td>
+            <td>Accounting</td>
+            <td>Stage 2 — immutable transaction ledger, server-side split calculation, full audit trail on every financial event.</td>
+            <td><span class="badge b-med">High</span></td>
+          </tr>
+          <tr>
+            <td>Regulatory scope (FDA / state pharmacy)</td>
+            <td>Legal</td>
+            <td>Platform provides Rx-gating and audit logs as compliance tooling — but licensing and dispensing legality rest with the client and require legal review.</td>
+            <td><span class="badge b-med">Review</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <strong>Important regulatory note:</strong> Selling peptides and pharmacy products in the US is subject to FDA rules and state pharmacy board regulations, and certain products may require a valid prescription and a licensed dispensing entity. This platform supplies the <em>technical</em> compliance tooling — Rx upload, gating flags, and audit logging — but it is not a substitute for legal counsel. We strongly recommend the client engage a healthcare/pharmacy attorney to confirm which products may be sold, by whom, and under what licensing. The platform can then be configured to enforce those rules.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 ASSUMPTIONS ============ -->
+<section id="assumptions">
+  <div class="wrap">
+    <div class="sec-tag">06 · Scope Assumptions</div>
+    <h2 class="sec-title">Confirmed Scope &amp; Assumptions</h2>
+    <p class="sec-sub">The plan below is based on the following confirmed decisions. Any change here may adjust scope and the timeline.</p>
+
+    <ul class="assume">
+      <li><strong>MVP roles — five live.</strong> Admin, Provider, Store Staff, Customer, and Pharmacy go live in the 45–60 day MVP. The Affiliate role is delivered in Stage 2.</li>
+      <li><strong>Payment — manual in MVP, gateway in Stage 2.</strong> The MVP launches with order placement only; orders are marked paid manually by Admin or Provider. The client-provided payment gateway and automated revenue splits are added in Stage 2.</li>
+      <li><strong>Rx — simple upload in MVP.</strong> Customers can upload a prescription file for Rx-flagged products; a full pharmacist/provider verification workflow is a Stage 2 addition.</li>
+      <li><strong>Split fulfillment.</strong> Peptide orders are fulfilled by the platform owner (Admin). Pharmacy-product orders are redirected to the relevant pharmacy partner, who fulfills them.</li>
+      <li><strong>Dual-source catalog.</strong> The Admin manages the peptide catalog; pharmacy partners upload their own pharmacy-product inventory to the platform.</li>
+      <li><strong>Affiliate commission — recurring.</strong> Affiliates earn a recurring commission tied to the ongoing sales of the providers they recruit, not a one-time signup bounty.</li>
+      <li><strong>Technology — MERN stack.</strong> The platform is built with MongoDB, Express, React and Node.js.</li>
+      <li><strong>Deployment — client's choice of two options.</strong> AWS (DocumentDB, EC2, S3 + CloudFront — recommended) or a single dedicated VPS such as Hostinger. The choice does not affect application code.</li>
+      <li><strong>Provider tools.</strong> Providers can chat with their customers in-app and access training videos and onboarding resources from their dashboard.</li>
+      <li><strong>Notifications.</strong> The platform includes email and SMS notifications — order confirmations, status updates, invitations, and account alerts — with templates managed by the Admin.</li>
+      <li><strong>Responsive web only.</strong> All interfaces are responsive web applications. A native mobile app is not part of this scope.</li>
+      <li><strong>UI/UX by a third party.</strong> Visual design and the component library are supplied by the client's design partner; this estimate covers front-end implementation only.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ 07 TIMELINE ============ -->
+<section id="timeline">
+  <div class="wrap">
+    <div class="sec-tag">07 · Timeline</div>
+    <h2 class="sec-title">Phased Delivery Plan</h2>
+    <p class="sec-sub">Delivery is split into three stages. Stage 1 — the MVP — is structured as five short sprints inside a 45–60 day window. Each sprint ends with a working, reviewable delivery, and the client receives a weekly review with live feedback throughout. Stage 2 extends the platform with payments and the affiliate layer; Stage 3 makes it AI-first.</p>
+
+    <!-- STAGE 1 -->
+    <div class="stage-banner">
+      <div class="sb-k">Stage 1 · The MVP</div>
+      <h3>Working Platform in 45–60 Days</h3>
+      <p>Five roles live, dual-source catalog, provider storefronts, customer ordering with simple Rx upload, and split fulfillment routing. Orders are marked paid manually — no payment gateway yet.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="phase">
+        <div class="pnum">S1</div>
+        <div class="phase-body">
+          <div class="pweeks">Sprint 1 · Days 1–10</div>
+          <h3>Foundation &amp; Multi-Tenant Core</h3>
+          <p>Kickoff, environment setup, multi-tenant database schema, authentication, and the role-based access control framework every later module depends on.</p>
+          <div class="deliv">
+            <span>Multi-Tenant DB Schema</span><span>Auth &amp; RBAC (5 roles)</span><span>API Skeleton</span><span>Deployment Pipeline</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="pnum">S2</div>
+        <div class="phase-body">
+          <div class="pweeks">Sprint 2 · Days 11–22</div>
+          <h3>Admin Console, Catalog &amp; Pharmacy Onboarding</h3>
+          <p>The Admin console, the dual-source catalog (peptide + pharmacy-uploaded inventory), stock tracking, and provider/pharmacy onboarding workflows.</p>
+          <div class="deliv">
+            <span>Admin Console</span><span>Dual-Source Catalog</span><span>Pharmacy Inventory Upload</span><span>Provider Onboarding</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="pnum">S3</div>
+        <div class="phase-body">
+          <div class="pweeks">Sprint 3 · Days 23–36</div>
+          <h3>Provider Storefronts &amp; Staff</h3>
+          <p>The storefront engine — providers select catalog products, set retail pricing, brand their store, invite customers, create scoped staff sub-accounts, chat with customers, and access training resources.</p>
+          <div class="deliv">
+            <span>Storefront Builder</span><span>Provider Pricing</span><span>Staff Sub-Accounts</span><span>Customer Invitations</span><span>Customer Chat</span><span>Training Resources</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="pnum">S4</div>
+        <div class="phase-body">
+          <div class="pweeks">Sprint 4 · Days 37–48</div>
+          <h3>Customer Ordering &amp; Split Fulfillment</h3>
+          <p>The customer shopping flow, cart and order placement, simple Rx file upload, manual payment marking, and fulfillment routing — peptide to platform owner, pharmacy products to pharmacy partners.</p>
+          <div class="deliv">
+            <span>Storefront Shopping</span><span>Order Placement</span><span>Simple Rx Upload</span><span>Fulfillment Routing</span><span>Pharmacy Order Inbox</span><span>Email &amp; SMS Notifications</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase">
+        <div class="pnum">S5</div>
+        <div class="phase-body">
+          <div class="pweeks">Sprint 5 · Days 49–60</div>
+          <h3>QA, Fixes &amp; MVP Launch</h3>
+          <p>Cross-role QA, tenant-isolation checks, bug fixes, production deployment, and a brief onboarding walkthrough for the Admin.</p>
+          <div class="deliv">
+            <span>QA Across 5 Roles</span><span>Bug Fixes</span><span>Production Deploy</span><span>Admin Walkthrough</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="total-note">
+      <strong>Stage 1 — MVP target: 45–60 days</strong> from kickoff to a live, working platform across five roles. The estimate assumes timely delivery of UI designs, prompt feedback on review cycles, and confirmed scope from the requirements workshop. Designs for each sprint's screens should arrive at least one week before that sprint begins.
+    </div>
+
+    <div class="callout alt">
+      <strong>Sprint-wise delivery &amp; weekly review:</strong> The platform is delivered sprint by sprint — at the end of each sprint the client receives a working, demonstrable build of that sprint's scope rather than waiting until the end. Throughout the project the client gets a <em>weekly review session with live feedback</em>, so direction can be corrected early and the MVP stays aligned with expectations. Feedback within the agreed scope is incorporated as the project runs; new scope is handled through a change request.
+    </div>
+
+    <!-- STAGE 2 -->
+    <div class="stage-banner p2">
+      <div class="sb-k">Stage 2 · Post-MVP Extension</div>
+      <h3>Payments, Affiliate &amp; Accounting</h3>
+      <p>Begins after the MVP is live and accepted. Adds online payment, automated revenue splits, the affiliate role and commission ledger, full Rx verification, accounting depth, and a support desk.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="phase p2">
+        <div class="pnum">S6</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 6 · ~3–4 weeks</div>
+          <h3>Payment Gateway &amp; Revenue Splits</h3>
+          <p>Integration of the client-provided payment gateway, replacing manual payment marking, plus the platform-side revenue split engine and earnings ledger.</p>
+          <div class="deliv">
+            <span>Gateway Integration</span><span>Webhook Confirmation</span><span>Revenue Split Engine</span><span>Earnings Ledger</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase p2">
+        <div class="pnum">S7</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 7 · ~3 weeks</div>
+          <h3>Affiliate Role &amp; Commission Ledger</h3>
+          <p>The sixth role — affiliate onboarding, referral attribution, the recurring commission engine, and the affiliate dashboard.</p>
+          <div class="deliv">
+            <span>Affiliate Portal</span><span>Referral Attribution</span><span>Recurring Commission Engine</span><span>Statements</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase p2">
+        <div class="pnum">S8</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 8 · ~3–4 weeks</div>
+          <h3>Rx Verification, Accounting, Support &amp; Hardening</h3>
+          <p>Full prescription verification workflow, accounting and reporting depth, the support desk, and a security hardening pass.</p>
+          <div class="deliv">
+            <span>Rx Verification Workflow</span><span>Accounting &amp; Reports</span><span>Support Desk</span><span>Security Hardening</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Why staged delivery:</strong> Online payments, automated revenue splits, and the recurring-commission ledger each carry real edge cases — refunds, reversals, attribution accuracy — that cannot be built robustly inside the 45–60 day window. AI capabilities, in turn, are most effective once they sit on a stable platform with real data flowing through it. Staging the work keeps the MVP deadline realistic while building each layer on solid foundations. Stage 2 and Stage 3 scheduling and cost are confirmed as each prior stage is accepted.
+    </div>
+
+    <!-- STAGE 3 -->
+    <div class="stage-banner p3">
+      <div class="sb-k">Stage 3 · AI Capabilities</div>
+      <h3>Making It an AI-First Platform</h3>
+      <p>Begins once the platform and its commercial layer are live and stable. A layer of AI features built on the platform's own catalog, order, and customer data — assisting every role, with humans retaining the decision on anything that touches compliance or money.</p>
+    </div>
+
+    <div class="timeline">
+      <div class="phase p3">
+        <div class="pnum">S9</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 9 · ~3 weeks</div>
+          <h3>Customer &amp; Provider AI Assist</h3>
+          <p>The customer-facing AI shopping assistant that answers product questions and suggests products from the catalog, plus AI-generated storefront copy and product descriptions for providers.</p>
+          <div class="deliv">
+            <span>AI Shopping Assistant</span><span>Product Recommendations</span><span>Storefront Copy Generation</span><span>Chat Reply Assist</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase p3">
+        <div class="pnum">S10</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 10 · ~3–4 weeks</div>
+          <h3>Operational AI — Pricing, Forecasting &amp; Analytics</h3>
+          <p>AI pricing suggestions for providers adding products to their store, inventory and demand forecasting for the Admin, smart reorder prediction for customers, and natural-language analytics across platform data.</p>
+          <div class="deliv">
+            <span>AI Pricing Suggestions</span><span>Demand Forecasting</span><span>Smart Reorder Prediction</span><span>Natural-Language Analytics</span>
+          </div>
+        </div>
+      </div>
+      <div class="phase p3">
+        <div class="pnum">S11</div>
+        <div class="phase-body">
+          <div class="pweeks">Phase 11 · ~3–4 weeks</div>
+          <h3>Compliance AI — Rx Triage &amp; Document Review</h3>
+          <p>AI-assisted prescription triage that extracts and pre-validates uploaded Rx documents, onboarding-document review for new providers and pharmacies, and catalog compliance flagging — each surfacing findings for a human to approve.</p>
+          <div class="deliv">
+            <span>Rx Document Triage</span><span>Onboarding Doc Review</span><span>Catalog Compliance Flagging</span><span>Human-Approval Workflow</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>AI assists, humans decide:</strong> Across every AI feature — and especially anything touching prescriptions, pricing, or partner credentials — the AI suggests, extracts, or drafts, and a human always makes the final call. No prescription is ever auto-approved. This keeps the platform safe and the client in control while still delivering a genuinely AI-first experience. AI features call a model API on each use, an ongoing cost that scales with platform activity and should be budgeted alongside hosting.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7B AI CAPABILITIES ============ -->
+<section id="ai">
+  <div class="wrap">
+    <div class="sec-tag">07B · AI Capabilities</div>
+    <h2 class="sec-title">AI Feature Set</h2>
+    <p class="sec-sub">Delivered in Stage 3, AI runs through every role of the platform. The features below are grouped by who they serve. Each is built on the platform's own data and follows an assist-not-decide principle.</p>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">AI · Customer</span><h3>Shopping &amp; Reordering</h3><span class="mstage" style="background:#d9d7f5;color:#322e6e;">Stage 3</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">🤖</div>
+          <h4>AI Shopping Assistant</h4>
+          <p>A conversational helper on each storefront, grounded in that store's catalog.</p>
+          <ul>
+            <li>Answers product questions in natural language</li>
+            <li>Suggests products based on what the customer describes</li>
+            <li>Explains differences between similar peptides or products</li>
+            <li>Scoped to the customer's assigned storefront</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">🔁</div>
+          <h4>Smart Reorder Prediction</h4>
+          <p>Anticipates when a customer is likely to run out and prompts a reorder.</p>
+          <ul>
+            <li>Predicts reorder timing from purchase history and cycles</li>
+            <li>Surfaces a timely reorder prompt to the customer</li>
+            <li>Especially useful for cyclical peptide use</li>
+            <li>Customer always chooses whether to act on it</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">AI · Provider</span><h3>Storefront &amp; Selling</h3><span class="mstage" style="background:#d9d7f5;color:#322e6e;">Stage 3</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">💲</div>
+          <h4>AI Pricing Suggestions</h4>
+          <p>Helps providers price products as they add them to their store.</p>
+          <ul>
+            <li>Suggests a retail price from base cost and category</li>
+            <li>Considers pricing across other storefronts</li>
+            <li>Provider keeps full control of the final price</li>
+            <li>Supports the platform's markup model</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">✍️</div>
+          <h4>Copy &amp; Chat Assist</h4>
+          <p>Generates storefront content and helps providers respond to customers.</p>
+          <ul>
+            <li>Auto-writes product descriptions and store bio from catalog data</li>
+            <li>Drafts promotional text for the storefront</li>
+            <li>Suggests replies in the customer chat — provider approves before sending</li>
+            <li>Saves providers from writing everything by hand</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="module">
+      <div class="module-head"><span class="mk">AI · Admin</span><h3>Operations &amp; Compliance</h3><span class="mstage" style="background:#d9d7f5;color:#322e6e;">Stage 3</span></div>
+      <div class="module-body">
+        <div class="feat">
+          <div class="ico">📈</div>
+          <h4>Forecasting &amp; Analytics</h4>
+          <p>Turns platform data into foresight and plain-language answers.</p>
+          <ul>
+            <li>Predicts which peptides and SKUs will run low</li>
+            <li>Flags reorder timing across the platform</li>
+            <li>Natural-language analytics — ask questions instead of building reports</li>
+            <li>Highlights provider growth and product performance</li>
+          </ul>
+        </div>
+        <div class="feat">
+          <div class="ico">🛡️</div>
+          <h4>Compliance AI</h4>
+          <p>A first-pass reviewer for prescriptions and partner documents.</p>
+          <ul>
+            <li>Rx triage — extracts and pre-validates uploaded prescriptions</li>
+            <li>Reviews provider and pharmacy onboarding documents</li>
+            <li>Flags catalog claims that could carry regulatory risk</li>
+            <li>Every finding is surfaced for a human to approve — no auto-approval</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout alt">
+      <strong>Why Stage 3, not the MVP:</strong> AI features are most accurate when they sit on a platform that already has real catalog, order, and customer data flowing through it. Building them after the platform and its commercial layer are stable means the AI is grounded in genuine data rather than assumptions — and keeps the 45–60 day MVP deadline protected. The client can choose to begin Stage 3 immediately after Stage 2, or run a lighter early version sooner; this is decided once the platform is live.
+    </div>
+  </div>
+</section>
+
+<!-- ============ 08 FEASIBILITY ============ -->
+<section id="feasibility">
+  <div class="wrap">
+    <div class="sec-tag">08 · Feasibility</div>
+    <h2 class="sec-title">Feasibility Analysis</h2>
+    <p class="sec-sub">A structured assessment confirming the project is viable, well-scoped, and built on proven technology.</p>
+
+    <div class="feas">
+      <div class="feas-card">
+        <div class="fh"><h4>⚙️ Technical Feasibility</h4><span class="badge b-high">High</span></div>
+        <p>Every component — multi-tenant data models, role-based access, dual-source catalogs, fulfillment routing — is well-established, production-proven technology used across thousands of marketplace platforms. Nothing here is experimental.</p>
+      </div>
+      <div class="feas-card warn">
+        <div class="fh"><h4>⏱️ Timeline Feasibility</h4><span class="badge b-med">Tight but Workable</span></div>
+        <p>45–60 days for a 5-role MVP is aggressive. It is achievable specifically because payments, the affiliate role, and Rx verification are deferred to Stage 2. The MVP depends on prompt design delivery and fast review turnaround; delays in either compress an already tight schedule.</p>
+      </div>
+      <div class="feas-card warn">
+        <div class="fh"><h4>⚖️ Regulatory Feasibility</h4><span class="badge b-med">Review Needed</span></div>
+        <p>US pharmacy and peptide commerce is regulated federally and by state. The platform enforces compliance rules — Rx gating, audit trails — but the rules must come from the client's legal counsel. A legal review should run in parallel with development.</p>
+      </div>
+      <div class="feas-card">
+        <div class="fh"><h4>📈 Scalability Feasibility</h4><span class="badge b-high">Very High</span></div>
+        <p>The multi-tenant, containerized architecture supports unlimited provider storefronts and pharmacy partners from a single deployment. Adding a partner is a data operation, not an infrastructure one.</p>
+      </div>
+      <div class="feas-card">
+        <div class="fh"><h4>🏪 Operational Feasibility</h4><span class="badge b-high">High</span></div>
+        <p>The Admin onboards partners, providers build their own storefronts, pharmacies manage their own stock, and staff handle orders — all through dashboards designed for non-technical users.</p>
+      </div>
+      <div class="feas-card warn">
+        <div class="fh"><h4>🎨 Design Dependency</h4><span class="badge b-med">Conditional</span></div>
+        <p>Front-end implementation depends on the third-party UI/UX team delivering designs on schedule. Given the compressed MVP window, designs for each sprint should land at least one week before that sprint begins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 09 RISKS ============ -->
+<section id="risks">
+  <div class="wrap">
+    <div class="sec-tag">09 · Risks</div>
+    <h2 class="sec-title">Risk Assessment</h2>
+    <p class="sec-sub">Identified risks and the strategies in place to keep the MVP and Stage 2 on track.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Risk</th><th>Description</th><th>Mitigation</th><th>Level</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MVP timeline compression</td>
+            <td>45–60 days is aggressive for a 5-role platform; design delays or slow feedback can push the date.</td>
+            <td>Payments, affiliate, and Rx verification are deferred to Stage 2 to protect the deadline. Sprint scope is fixed; new requests go to Stage 2 or a change request.</td>
+            <td><span class="badge b-med">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Design delivery delays</td>
+            <td>Front-end work depends on the third-party UI/UX team supplying designs on time.</td>
+            <td>Designs for each sprint should land a week ahead. Back-end and API work proceeds independently of design availability.</td>
+            <td><span class="badge b-med">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Regulatory uncertainty</td>
+            <td>Which peptides and pharmacy products can legally be sold, and under what licensing, is not yet confirmed.</td>
+            <td>Legal review begins at kickoff, in parallel. Rx-gating controls are built configurable so rules apply without code changes.</td>
+            <td><span class="badge b-med">Medium</span></td>
+          </tr>
+          <tr>
+            <td>Payment gateway capabilities</td>
+            <td>The client-provided gateway is not yet named; its support for split payouts is unknown.</td>
+            <td>This is a Stage 2 concern. Phase 6 estimate assumes a standard card gateway; a non-standard one is handled via change request.</td>
+            <td><span class="badge b-low">Low</span></td>
+          </tr>
+          <tr>
+            <td>Scope creep</td>
+            <td>Marketplace platforms tend to grow mid-build with extra flows and reports.</td>
+            <td>A detailed scope document is signed before development. Changes go through a formal change-request process with revised cost and timeline.</td>
+            <td><span class="badge b-low">Low</span></td>
+          </tr>
+          <tr>
+            <td>Tenant data isolation</td>
+            <td>A flaw could expose one provider's pricing, customers, or orders to another.</td>
+            <td>Tenant scoping is enforced at the data layer from Sprint 1 and is a focus of the Sprint 5 QA pass.</td>
+            <td><span class="badge b-low">Low</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 NEXT STEPS ============ -->
+<section id="next" style="border-bottom: none;">
+  <div class="wrap">
+    <div class="sec-tag">10 · Next Steps</div>
+    <h2 class="sec-title">How We Proceed</h2>
+    <p class="sec-sub">A clear path from proposal acceptance to MVP kickoff.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Step</th><th>Action</th><th>Owner</th><th>Timeline</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Proposal Review</td><td>Client reviews this proposal, raises clarifications, and confirms the MVP scope.</td><td>Client</td><td>Day 0</td></tr>
+          <tr><td>2. Requirements Workshop</td><td>Working session to finalize roles, the Rx model, fulfillment rules, and edge cases.</td><td>Both</td><td>Day 0–3</td></tr>
+          <tr><td>3. Scope Document</td><td>Detailed MVP specification shared for written sign-off before development begins.</td><td>Dev Team</td><td>Day 3–5</td></tr>
+          <tr><td>4. Agreement &amp; Advance</td><td>Development agreement signed and the initial milestone payment processed.</td><td>Both</td><td>Day 5</td></tr>
+          <tr><td>5. Legal Review</td><td>Client engages pharmacy/healthcare counsel to confirm sellable products — runs in parallel.</td><td>Client</td><td>Day 5 (immediately)</td></tr>
+          <tr><td>6. Design Coordination</td><td>Client's UI/UX partner aligns on the sprint delivery schedule so designs precede each sprint.</td><td>Client</td><td>Day 5</td></tr>
+          <tr><td>7. MVP Kickoff</td><td>Sprint 1 begins. The 45–60 day clock starts. Progress updates shared regularly.</td><td>Dev Team</td><td>Day 5–7</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="ftitle">Pharmacy &amp; Peptide Marketplace Platform — Technical Proposal v1.0</div>
+    <div>Confidential. Prepared for the Client — May 2026.</div>
+    <div>All specifications subject to finalization during the requirements workshop. Pricing indicative; final quote follows scope sign-off.</div>
+    <div class="fmono">PROPOSAL · REQ-001 · CONFIDENTIAL</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var icon = document.getElementById('themeIcon');
+    var label = document.getElementById('themeLabel');
+    var toggle = document.getElementById('themeToggle');
+    var userSet = false;
+
+    function apply(theme) {
+      root.setAttribute('data-theme', theme);
+      if (theme === 'dark') { icon.textContent = '☀'; label.textContent = 'LIGHT'; }
+      else { icon.textContent = '☾'; label.textContent = 'DARK'; }
+    }
+
+    // 1) System preference first
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    apply(mq.matches ? 'dark' : 'light');
+
+    // Follow system changes until the user manually overrides
+    mq.addEventListener('change', function (e) {
+      if (!userSet) apply(e.matches ? 'dark' : 'light');
+    });
+
+    // 2) Manual override
+    toggle.addEventListener('click', function () {
+      userSet = true;
+      var current = root.getAttribute('data-theme');
+      apply(current === 'dark' ? 'light' : 'dark');
+    });
+  })();
+</script>
+
+</body>
+</html>
